@@ -5,15 +5,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import pw.prsk.gallery.R
 
-class NewsFragment: Fragment() {
+class NewsFragment: Fragment(), NewsViewInterface {
+    private val presenter = NewsPresenter()
+    private lateinit var newsContainer: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_news, container, false)
+        newsContainer = view.findViewById(R.id.rvNewsContainer)
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        init()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        newsContainer.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = NewsAdapter()
+        }
+    }
+
+    private fun init() {
+        presenter.attachView(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 }

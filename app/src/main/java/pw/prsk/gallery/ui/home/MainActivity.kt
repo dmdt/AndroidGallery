@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
 
 class MainActivity : AppCompatActivity() {
-    val tabNames = listOf(
+    private val tabNames = listOf(
         "News",
         "Gallery",
         "Test tab"
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         vpMain.adapter = PagerAdapter(this)
         val tlm = TabLayoutMediator(tlMain, vpMain) { tab, position ->
             vpMain.setCurrentItem(tab.position, true)
-            tab.orCreateBadge.number = position
+            tab.orCreateBadge.number = (position + 1) * (0..1024).random()
             tab.text = tabNames[position]
         }.attach()
         vpMain.setCurrentItem(1, false)
