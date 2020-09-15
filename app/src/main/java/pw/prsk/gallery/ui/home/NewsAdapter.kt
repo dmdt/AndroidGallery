@@ -6,13 +6,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
 import kotlinx.coroutines.*
 import pw.prsk.gallery.R
+import com.squareup.picasso.Picasso
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     private val adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private var news: List<News> = listOf()
+    private var news: List<News>? = null
 
     var dataLoading: Boolean = false
 
@@ -30,18 +33,24 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.tvAuthor.text = news[position].author
-        holder.tvDate.text = news[position].date
-        holder.tvTitle.text = news[position].title
-        holder.ivImage.setImageBitmap(news[position].image)
+        holder.tvAuthor.text = news?.get(position)?.author ?: "Error"
+        holder.tvDate.text = news?.get(position)?.date ?: "Error"
+        holder.tvTitle.text = news?.get(position)?.title ?: "Error"
+        Picasso.get()
+            .load(news?.get(position)?.imageUrl)
+            .noPlaceholder()
+            .networkPolicy(NetworkPolicy.NO_CACHE)
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
+            .fit()
+            .centerCrop()
+            .into(holder.ivImage)
     }
 
-    override fun getItemCount(): Int = news.size
+    override fun getItemCount(): Int = news?.size ?: 0
 
     fun setData(news: List<News>) {
-        val currentListSize = this.news.size
+        val currentListSize = this.news?.size ?: 0
         this.news = news
         notifyItemRangeInserted(currentListSize, news.size)
-//        notifyDataSetChanged()
     }
 }

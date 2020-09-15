@@ -11,7 +11,6 @@ import pw.prsk.gallery.ui.home.News
 
 class NewsRepository {
     private val news: MutableList<News> = mutableListOf()
-    private val pictureRep = PicturesRepository()
 
     fun getNewsList(): List<News> = news
 
@@ -22,7 +21,6 @@ class NewsRepository {
                 "Today",
                 loadTitle()
             )
-            article.image = pictureRep.getPicture(article.imageUrl)
             news.add(article)
         }
     }

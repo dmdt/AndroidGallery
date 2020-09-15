@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pw.prsk.gallery.R
-import kotlin.coroutines.suspendCoroutine
 
 class NewsFragment: Fragment(), NewsViewInterface {
     private val presenter = NewsPresenter()
@@ -53,11 +52,13 @@ class NewsFragment: Fragment(), NewsViewInterface {
                 val adapter = recyclerView.adapter as NewsAdapter
                 val itemCount = adapter.itemCount
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (layoutManager.findLastVisibleItemPosition() == itemCount - 1 && !adapter.dataLoading) {
-                    adapter.dataLoading = true
-                    recyclerView.removeOnScrollListener(scrollListenter)
-                    showToast("Load more news...")
-                    presenter.loadNews()
+                if (itemCount > 0) {
+                    if (layoutManager.findLastVisibleItemPosition() == itemCount - 1 && !adapter.dataLoading) {
+                        adapter.dataLoading = true
+                        recyclerView.removeOnScrollListener(scrollListenter)
+                        showToast("Load more news...")
+                        presenter.loadNews()
+                    }
                 }
             }
         }
@@ -74,7 +75,6 @@ class NewsFragment: Fragment(), NewsViewInterface {
         adapter.setData(news)
         adapter.dataLoading = false
         newsContainer?.addOnScrollListener(scrollListenter)
-
     }
 
     override fun showToast(resId: Int) {
