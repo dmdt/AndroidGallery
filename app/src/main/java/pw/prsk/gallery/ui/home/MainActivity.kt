@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         "Gallery",
         "Test tab"
     )
+    private lateinit var tlm: TabLayoutMediator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +23,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewPager() {
         vpMain.adapter = PagerAdapter(this)
-        val tlm = TabLayoutMediator(tlMain, vpMain) { tab, position ->
+        tlm = TabLayoutMediator(tlMain, vpMain) { tab, position ->
             vpMain.setCurrentItem(tab.position, true)
             tab.orCreateBadge.number = (position + 1) * (0..1024).random()
             tab.text = tabNames[position]
-        }.attach()
+        }
+        tlm.attach()
         vpMain.setCurrentItem(1, false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tlm.detach()
+        vpMain.adapter = null
     }
 }
