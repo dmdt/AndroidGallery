@@ -1,6 +1,5 @@
 package pw.prsk.gallery.ui.home
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pw.prsk.gallery.R
+import kotlin.coroutines.suspendCoroutine
 
 class NewsFragment: Fragment(), NewsViewInterface {
     private val presenter = NewsPresenter()
     private var newsContainer: RecyclerView? = null
     private var progressBar: ProgressBar? = null
+    private lateinit var scrollListenter: RecyclerView.OnScrollListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +41,26 @@ class NewsFragment: Fragment(), NewsViewInterface {
         newsContainer?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = NewsAdapter()
+            addOnScrollListener(scrollListenter)
         }
         presenter.initNewsList()
     }
 
     private fun init() {
         presenter.attachView(this)
+        scrollListenter = object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                val adapter = recyclerView.adapter as NewsAdapter
+                val itemCount = adapter.itemCount
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                if (layoutManager.findLastVisibleItemPosition() == itemCount - 1 && !adapter.dataLoading) {
+                    adapter.dataLoading = true
+                    recyclerView.removeOnScrollListener(scrollListenter)
+                    showToast("Load more news...")
+                    presenter.loadNews()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -55,7 +70,11 @@ class NewsFragment: Fragment(), NewsViewInterface {
     }
 
     override fun onDataUpdated(news: List<News>) {
-        (newsContainer?.adapter as NewsAdapter?)?.setData(news)
+        val adapter = newsContainer?.adapter as NewsAdapter
+        adapter.setData(news)
+        adapter.dataLoading = false
+        newsContainer?.addOnScrollListener(scrollListenter)
+
     }
 
     override fun showToast(resId: Int) {

@@ -14,6 +14,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     private var news: List<News> = listOf()
 
+    var dataLoading: Boolean = false
+
     class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvAuthor: TextView = view.findViewById(R.id.tvNewsAuthor)
         val tvDate: TextView = view.findViewById(R.id.tvNewsDate)
@@ -37,7 +39,9 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun getItemCount(): Int = news.size
 
     fun setData(news: List<News>) {
+        val currentListSize = this.news.size
         this.news = news
-        notifyDataSetChanged()
+        notifyItemRangeInserted(currentListSize, news.size)
+//        notifyDataSetChanged()
     }
 }

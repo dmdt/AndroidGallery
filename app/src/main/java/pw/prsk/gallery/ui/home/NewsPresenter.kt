@@ -17,15 +17,20 @@ class NewsPresenter {
     }
 
     fun initNewsList() {
-        view?.showToast("Start load articles")
+        view?.showProgressBar(true)
         scope.launch {
-            newsRepository.loadNews(10)
+            newsRepository.loadNews(5)
             view?.showProgressBar(false)
             view?.onDataUpdated(newsRepository.getNewsList())
         }
     }
 
-    fun addNews() {
-
+    fun loadNews() {
+        // Show progress bar
+        scope.launch {
+            newsRepository.loadNews(5)
+            // Unshow progress bar
+            view?.onDataUpdated(newsRepository.getNewsList())
+        }
     }
 }
