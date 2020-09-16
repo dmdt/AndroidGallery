@@ -1,9 +1,7 @@
 package pw.prsk.gallery.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -45,8 +43,22 @@ class NewsFragment: Fragment(), NewsViewInterface {
         presenter.initNewsList()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_home, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
+        R.id.miSettings -> {
+            showToast("Settings not implemented.")
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
     private fun init() {
         presenter.attachView(this)
+        setHasOptionsMenu(true)
         scrollListenter = object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val adapter = recyclerView.adapter as NewsAdapter
