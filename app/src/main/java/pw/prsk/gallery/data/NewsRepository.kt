@@ -16,12 +16,19 @@ class NewsRepository {
 
     suspend fun loadNews(count: Int) {
         repeat(count) {
-            val article = News(
+            var title: String? = null
+            try {
+                title = loadTitle()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@repeat
+            }
+
+            news.add(News(
                 "Dmitriy",
                 "Today",
-                loadTitle()
-            )
-            news.add(article)
+                title
+            ))
         }
     }
 
