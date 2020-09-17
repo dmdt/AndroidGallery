@@ -2,7 +2,7 @@ package pw.prsk.gallery.ui.home
 
 import android.os.Bundle
 import android.view.*
-import android.widget.ProgressBar
+import pw.prsk.gallery.ui.home.MainActivity.MainTabs
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,7 +69,7 @@ class NewsFragment : Fragment(), NewsViewInterface {
                 val itemCount = adapter.itemCount
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 if (itemCount > 0) {
-                    if (layoutManager.findLastVisibleItemPosition() == itemCount - 1 && !adapter.dataLoading) {
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() == itemCount - 1 && !adapter.dataLoading) {
                         adapter.dataLoading = true
                         recyclerView.removeOnScrollListener(scrollListener)
                         presenter.loadNews()
@@ -89,6 +89,8 @@ class NewsFragment : Fragment(), NewsViewInterface {
     override fun onDataUpdated(news: List<News>) {
         val adapter = newsContainer?.adapter as NewsAdapter
         adapter.addListItems(news)
+        val activity: MainActivity = activity as MainActivity
+        activity.updateTabBadge(MainTabs.TAB_NEWS, adapter.itemCount)
         adapter.dataLoading = false
         newsContainer?.addOnScrollListener(scrollListener)
     }

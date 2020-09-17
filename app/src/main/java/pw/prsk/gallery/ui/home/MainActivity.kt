@@ -23,10 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewPager() {
         vpMain.adapter = PagerAdapter(this)
+        val tabs = MainTabs.values()
         tlm = TabLayoutMediator(tlMain, vpMain) { tab, position ->
             vpMain.setCurrentItem(tab.position, true)
-            tab.orCreateBadge.number = (position + 1) * (0..1024).random()
-            tab.text = tabNames[position]
+            tab.text = tabs[position].tabName
         }
         tlm.attach()
         vpMain.setCurrentItem(1, false)
@@ -36,5 +36,16 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         tlm.detach()
         vpMain.adapter = null
+    }
+
+    fun updateTabBadge(tabInfo: MainTabs, count: Int) {
+        val tab = tlMain.getTabAt(tabInfo.tabNum)
+        tab?.orCreateBadge?.number = count
+    }
+
+    enum class MainTabs(val tabNum: Int, val tabName: String) {
+        TAB_NEWS(0, "News"),
+        TAB_GALLERY(1, "Gallery"),
+        TAB_TEST(2, "Test")
     }
 }

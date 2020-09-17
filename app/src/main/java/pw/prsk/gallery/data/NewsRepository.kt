@@ -17,7 +17,7 @@ class NewsRepository {
     suspend fun loadNews(count: Int): List<News> {
         val newsList: MutableList<News> = mutableListOf()
         repeat(count) {
-            var title: String? = null
+            val title: String?
             try {
                 title = loadTitle()
             } catch (e: Exception) {
