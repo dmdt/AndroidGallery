@@ -19,18 +19,23 @@ class NewsPresenter {
     fun initNewsList() {
         view?.showProgressBar(true)
         scope.launch {
-            newsRepository.loadNews(5)
+            val news = newsRepository.loadNews(5)
             view?.showProgressBar(false)
-            view?.onDataUpdated(newsRepository.getNewsList())
+            view?.onDataUpdated(news)
         }
     }
 
     fun loadNews() {
-        // Show progress bar
+        view?.showProgressBar(true)
         scope.launch {
-            newsRepository.loadNews(5)
-            // Unshow progress bar
-            view?.onDataUpdated(newsRepository.getNewsList())
+            val news = newsRepository.loadNews(5)
+            view?.showProgressBar(false)
+            view?.onDataUpdated(news)
         }
+    }
+
+    fun reloadNews() {
+        view?.clearNewsList()
+        loadNews()
     }
 }

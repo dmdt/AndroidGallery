@@ -10,11 +10,12 @@ import okhttp3.Request
 import pw.prsk.gallery.ui.home.News
 
 class NewsRepository {
-    private val news: MutableList<News> = mutableListOf()
+//    private val news: MutableList<News> = mutableListOf()
 
-    fun getNewsList(): List<News> = news
+//    fun getNewsList(): List<News> = news
 
-    suspend fun loadNews(count: Int) {
+    suspend fun loadNews(count: Int): List<News> {
+        val newsList: MutableList<News> = mutableListOf()
         repeat(count) {
             var title: String? = null
             try {
@@ -24,12 +25,13 @@ class NewsRepository {
                 return@repeat
             }
 
-            news.add(News(
+            newsList.add(News(
                 "Dmitriy",
                 "Today",
                 title
             ))
         }
+        return newsList
     }
 
     private suspend fun loadTitle(): String = withContext(Dispatchers.IO) {

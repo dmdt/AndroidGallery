@@ -5,4 +5,5 @@ interface NewsViewInterface {
     fun showToast(resId: Int)
     fun showToast(string: String)
     fun showProgressBar(show: Boolean)
+    fun clearNewsList()
 }
