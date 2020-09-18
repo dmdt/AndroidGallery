@@ -2,16 +2,14 @@ package pw.prsk.gallery.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
 
 class MainActivity : AppCompatActivity() {
-    private val tabNames = listOf(
-        "News",
-        "Gallery",
-        "Test tab"
-    )
     private lateinit var tlm: TabLayoutMediator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +17,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initViewPager()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_home, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.miSettings -> {
+            Toast.makeText(this, "Settings not implemented.", Toast.LENGTH_SHORT).show()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun initViewPager() {

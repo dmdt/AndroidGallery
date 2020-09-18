@@ -47,22 +47,8 @@ class NewsFragment : Fragment(), NewsViewInterface {
         presenter.initNewsList()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_home, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.miSettings -> {
-            showToast("Settings not implemented.")
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
-
     private fun init() {
         presenter.attachView(this)
-        setHasOptionsMenu(true)
         scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val adapter = recyclerView.adapter as NewsAdapter
