@@ -1,5 +1,6 @@
 package pw.prsk.gallery.ui.home
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -8,6 +9,7 @@ import android.widget.Toast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
+import pw.prsk.gallery.ui.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tlm: TabLayoutMediator
@@ -28,7 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.miSettings -> {
-            Toast.makeText(this, "Settings not implemented.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
             true
         }
         else -> super.onOptionsItemSelected(item)
