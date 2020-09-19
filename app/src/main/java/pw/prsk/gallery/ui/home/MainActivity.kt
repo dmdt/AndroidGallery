@@ -5,11 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
-import pw.prsk.gallery.ui.settings.SettingsActivity
+import pw.prsk.gallery.ui.preferences.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tlm: TabLayoutMediator
