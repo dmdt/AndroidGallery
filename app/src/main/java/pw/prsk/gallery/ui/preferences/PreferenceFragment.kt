@@ -16,6 +16,7 @@ class PreferenceFragment : PreferenceFragmentCompat(), PreferenceViewInterface {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        preferenceManager.sharedPreferencesName = SETTINGS_FILE_NAME
         setPreferencesFromResource(R.xml.preferences, rootKey)
         preferenceManager.findPreference<ListPreference>("theme")?.onPreferenceChangeListener =
             listChangeListener
@@ -28,9 +29,9 @@ class PreferenceFragment : PreferenceFragmentCompat(), PreferenceViewInterface {
     }
 
     private val listChangeListener = OnPreferenceChangeListener { preference, newValue ->
-        when (preference.title) {
-            "App theme" -> presenter.onThemeChange(newValue as String)
-            "App language" -> presenter.onLanguageChange(newValue as String)
+        when (preference.key) {
+            THEME_SETTING -> presenter.onThemeChange(newValue as String)
+            LANGUAGE_SETTING -> presenter.onLanguageChange(newValue as String)
             else -> showToast("Unknown property.")
         }
         true
@@ -42,5 +43,12 @@ class PreferenceFragment : PreferenceFragmentCompat(), PreferenceViewInterface {
 
     override fun showToast(string: String) {
         Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        const val SETTINGS_FILE_NAME = "app.settings"
+
+        const val THEME_SETTING = "theme"
+        const val LANGUAGE_SETTING = "language"
     }
 }

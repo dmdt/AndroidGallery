@@ -1,13 +1,16 @@
 package pw.prsk.gallery.ui.home
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
+import pw.prsk.gallery.ui.preferences.PreferenceFragment
 import pw.prsk.gallery.ui.preferences.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initAppSettings()
         setContentView(R.layout.activity_main)
 
         initViewPager()
@@ -34,6 +38,16 @@ class MainActivity : AppCompatActivity() {
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun initAppSettings() {
+        val preferences = getSharedPreferences(PreferenceFragment.SETTINGS_FILE_NAME, Context.MODE_PRIVATE)
+        val themeMode = when (preferences.getString(PreferenceFragment.THEME_SETTING, "")) {
+            "Dark theme" -> AppCompatDelegate.MODE_NIGHT_YES
+            "Light theme" -> AppCompatDelegate.MODE_NIGHT_NO
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        AppCompatDelegate.setDefaultNightMode(themeMode)
     }
 
     private fun initViewPager() {
