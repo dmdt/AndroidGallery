@@ -47,4 +47,6 @@ dependencies {
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    // Preferences
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 }

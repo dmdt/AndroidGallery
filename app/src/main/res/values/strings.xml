@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Gallery</string>
     <string name="menu_settings_label">Settings</string>
+
+    <string-array name="theme_preference_list">
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Follow system</item>
+    </string-array>
+
+    <string-array name="language_preference_list">
+        <item>English</item>
+        <item>Russian</item>
+        <item>Follow system</item>
+    </string-array>
 </resources>
