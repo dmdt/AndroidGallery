@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/darkPrimaryColor</item>
+        <item name="colorPrimaryDark">@color/darkPrimaryDarkColor</item>
+        <item name="colorAccent">@color/darkSecondaryColor</item>
+
+        <item name="colorPrimaryVariant">@color/darkPrimaryLightColor</item>
+        <item name="colorSecondary">@color/darkSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/darkSecondaryLightColor</item>
+        <item name="android:colorBackground">@color/darkPrimaryColor</item>
+        <item name="colorSurface">@color/darkPrimaryDarkColor</item>
+        <item name="colorOnSurface">@color/darkPrimaryTextColor</item>
+
+        <item name="swipeRefreshLayoutProgressSpinnerBackgroundColor">@color/darkPrimaryLightColor</item>
+    </style>
+
+    <style name="AppTheme.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/darkSecondaryColor</item>
+        <item name="tabSelectedTextColor">@color/darkSecondaryColor</item>
+        <item name="tabTextColor">@color/darkPrimaryTextColor</item>
+    </style>
+</resources>

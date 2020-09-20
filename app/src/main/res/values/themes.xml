@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <!-- Light application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/lightPrimaryColor</item>
+        <item name="colorPrimaryDark">@color/lightPrimaryDarkColor</item>
+        <item name="colorAccent">@color/lightSecondaryColor</item>
+    </style>
+
+    <style name="AppTheme.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/lightSecondaryColor</item>
+        <item name="tabSelectedTextColor">@color/lightSecondaryColor</item>
+        <item name="tabTextColor">@color/lightPrimaryTextColor</item>
+    </style>
+</resources>
