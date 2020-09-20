@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/lightPrimaryColor</item>
         <item name="colorPrimaryDark">@color/lightPrimaryDarkColor</item>
         <item name="colorAccent">@color/lightSecondaryColor</item>
+        <!--    Widget styles   -->
+        <item name="tabStyle">@style/AppTheme.TabLayout</item>
     </style>
 
     <style name="AppTheme.TabLayout" parent="Widget.Design.TabLayout">
