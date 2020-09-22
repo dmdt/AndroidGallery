@@ -41,6 +41,9 @@ class NewsFragment : Fragment(), NewsViewInterface {
             adapter = NewsAdapter()
             addOnScrollListener(scrollListener)
         }
+        refreshLayout?.setColorSchemeColors(
+            resources.getColor(R.color.darkSecondaryColor, null)
+        )
         refreshLayout?.setOnRefreshListener {
             presenter.reloadNews()
         }

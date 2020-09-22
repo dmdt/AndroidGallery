@@ -7,12 +7,10 @@
     android:orientation="vertical"
     android:theme="@style/Platform.MaterialComponents"
     tools:context=".ui.home.MainActivity">
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/colorPrimary" />
+        android:layout_height="wrap_content" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpMain"
