@@ -2,9 +2,20 @@
 <resources>
     <!-- Light application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <!--    Primary colors  -->
         <item name="colorPrimary">@color/lightPrimaryColor</item>
-        <item name="colorPrimaryDark">@color/lightPrimaryDarkColor</item>
-        <item name="colorAccent">@color/lightSecondaryColor</item>
+        <item name="colorPrimaryVariant">@color/lightPrimaryDarkColor</item>
+        <item name="colorOnPrimary">@color/lightPrimaryTextColor</item>
+        <!--    Secondary colors  -->
+        <item name="colorSecondary">@color/lightSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/lightSecondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/lightSecondaryTextColor</item>
+        <!--    Error colors    -->
+        <item name="colorError">@color/lightColorError</item>
+        <item name="colorOnError">@color/lightSecondaryTextColor</item>
+        <!--    Surface colors  -->
+        <item name="colorSurface">@color/lightPrimaryDarkColor</item>
+        <item name="colorOnSurface">@color/lightPrimaryTextColor</item>
         <!--    Widget styles   -->
         <item name="tabStyle">@style/AppTheme.TabLayout</item>
     </style>

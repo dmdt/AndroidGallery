@@ -9,6 +9,8 @@
     <color name="lightSecondaryDarkColor">#0026ca</color>
     <color name="lightPrimaryTextColor">#000000</color>
     <color name="lightSecondaryTextColor">#ffffff</color>
+
+    <color name="lightColorError">#F44336</color>
     <!--    Dark Theme      -->
     <color name="darkPrimaryColor">#000000</color>
     <color name="darkPrimaryLightColor">#2c2c2c</color>
