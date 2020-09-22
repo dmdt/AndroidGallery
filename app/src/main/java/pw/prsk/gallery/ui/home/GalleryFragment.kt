@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,6 +14,7 @@ import pw.prsk.gallery.R
 class GalleryFragment: Fragment(), GalleryViewInterface {
     private val presenter: GalleryPresenter = GalleryPresenter()
     private var galleryContainer: RecyclerView? = null
+    private var tvPermissionNotGranted: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,26 +24,22 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
         with(view) {
             galleryContainer = findViewById(R.id.rvGallery)
+            tvPermissionNotGranted = findViewById(R.id.tvPermissionNotGranted)
         }
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        galleryContainer?.apply {
-            adapter = GalleryAdapter()
-            layoutManager = GridLayoutManager(this.context, 3)
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         init()
     }
 
     private fun init() {
         presenter.attachView(this)
         presenter.checkPermissions()
+        galleryContainer?.apply {
+            adapter = GalleryAdapter()
+            layoutManager = GridLayoutManager(this.context, 3)
+        }
     }
 
     override fun onDestroy() {
@@ -52,9 +50,12 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     override fun showPermissionNotGrantedMessage(show: Boolean) {
         if (show) {
+            galleryContainer?.visibility = View.GONE
+            tvPermissionNotGranted?.visibility = View.VISIBLE
             showToast("Permission not granted.")
         } else {
-
+            galleryContainer?.visibility = View.VISIBLE
+            tvPermissionNotGranted?.visibility = View.GONE
         }
     }
 

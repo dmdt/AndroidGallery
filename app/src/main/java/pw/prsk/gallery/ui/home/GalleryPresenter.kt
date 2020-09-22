@@ -34,6 +34,7 @@ class GalleryPresenter {
                 if (canRequestPermission) {
                     requestPermission()
                 }
+                view?.showPermissionNotGrantedMessage(true)
             }
             PackageManager.PERMISSION_GRANTED -> {
                 loadPhotos()
@@ -54,9 +55,10 @@ class GalleryPresenter {
         when (requestCode) {
             PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    view?.showPermissionNotGrantedMessage(false)
                     loadPhotos()
                 } else {
-                    view?.showPermissionNotGrantedMessage()
+                    view?.showPermissionNotGrantedMessage(true)
                 }
                 return
             }
