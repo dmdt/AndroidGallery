@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     private fun init() {
         presenter.attachView(this)
-        presenter.loadPhotos()
+        presenter.checkPermissions()
     }
 
     override fun onDestroy() {
@@ -49,7 +50,27 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
         galleryContainer = null
     }
 
-    override fun loadPhotos(count: Int) {
-        TODO("Not yet implemented")
+    override fun showPermissionNotGrantedMessage(show: Boolean) {
+        if (show) {
+            showToast("Permission not granted.")
+        } else {
+
+        }
+    }
+
+    override fun showToast(resId: Int) {
+        Toast.makeText(this.context, resId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showToast(str: String) {
+        Toast.makeText(this.context, str, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        presenter.requestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

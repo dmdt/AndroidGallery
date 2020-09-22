@@ -1,5 +1,7 @@
 package pw.prsk.gallery.ui.home
 
 interface GalleryViewInterface {
-    fun loadPhotos(count: Int = 10)
+    fun showPermissionNotGrantedMessage(show: Boolean)
+    fun showToast(resId: Int)
+    fun showToast(str: String)
 }
