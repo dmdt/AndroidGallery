@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pw.prsk.gallery.R
+import pw.prsk.gallery.data.Photo
 
 class GalleryFragment: Fragment(), GalleryViewInterface {
     private val presenter: GalleryPresenter = GalleryPresenter()
@@ -34,12 +35,13 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
     }
 
     private fun init() {
-        presenter.attachView(this)
-        presenter.checkPermissions()
         galleryContainer?.apply {
-            adapter = GalleryAdapter()
+            adapter = GalleryAdapter(this.context.contentResolver)
             layoutManager = GridLayoutManager(this.context, 3)
         }
+
+        presenter.attachView(this)
+        presenter.checkPermissions()
     }
 
     override fun onDestroy() {
@@ -65,6 +67,11 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     override fun showToast(str: String) {
         Toast.makeText(this.context, str, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun initDataset(list: MutableList<Photo>) {
+        val adapter = galleryContainer?.adapter as GalleryAdapter
+        adapter.setList(list)
     }
 
     override fun onRequestPermissionsResult(

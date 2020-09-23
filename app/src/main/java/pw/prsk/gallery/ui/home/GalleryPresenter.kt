@@ -2,26 +2,34 @@ package pw.prsk.gallery.ui.home
 
 import android.Manifest
 import android.content.pm.PackageManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import pw.prsk.gallery.data.PhotosProvider
 
 class GalleryPresenter {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     private var view: GalleryViewInterface? = null
     private var photosProvider: PhotosProvider? = null
 
     fun attachView(view: GalleryViewInterface) {
         this.view = view
+
+        val context = (view as GalleryFragment).context
+        photosProvider = PhotosProvider(context?.applicationContext?.contentResolver!!)
     }
 
     fun detachView() {
         this.view = null
     }
 
-    fun loadPhotos() {
-        if (photosProvider == null) {
-            val context = (view as GalleryFragment).context
-            photosProvider = PhotosProvider(context?.contentResolver!!)
+    private fun loadPhotos() {
+        scope.launch {
+            val list = photosProvider?.loadPhotos() ?: mutableListOf()
+            view?.initDataset(list)
         }
-        photosProvider?.loadPhotos()
     }
 
     fun checkPermissions() {
