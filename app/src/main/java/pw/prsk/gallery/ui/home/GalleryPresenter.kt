@@ -23,6 +23,7 @@ class GalleryPresenter {
 
     fun detachView() {
         this.view = null
+        photosProvider = null
     }
 
     private fun loadPhotos() {

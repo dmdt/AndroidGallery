@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pw.prsk.gallery.R
 import pw.prsk.gallery.data.Photo
+import pw.prsk.gallery.data.PhotosProvider
 
 class GalleryFragment: Fragment(), GalleryViewInterface {
     private val presenter: GalleryPresenter = GalleryPresenter()
     private var galleryContainer: RecyclerView? = null
-    private var tvPermissionNotGranted: TextView? = null
+    private var tvPermissionRationale: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,7 +26,7 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
         with(view) {
             galleryContainer = findViewById(R.id.rvGallery)
-            tvPermissionNotGranted = findViewById(R.id.tvPermissionNotGranted)
+            tvPermissionRationale = findViewById(R.id.tvPermissionRationale)
         }
         return view
     }
@@ -36,7 +37,8 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     private fun init() {
         galleryContainer?.apply {
-            adapter = GalleryAdapter(this.context.contentResolver)
+            adapter = GalleryAdapter()
+            (adapter as GalleryAdapter).provider = PhotosProvider(this.context.contentResolver)
             layoutManager = GridLayoutManager(this.context, 3)
         }
 
@@ -46,18 +48,20 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.detachView()
+        val adapter = galleryContainer?.adapter as GalleryAdapter
+        adapter.provider?.contentResolver = null
         galleryContainer = null
+        presenter.detachView()
     }
 
     override fun showPermissionNotGrantedMessage(show: Boolean) {
         if (show) {
             galleryContainer?.visibility = View.GONE
-            tvPermissionNotGranted?.visibility = View.VISIBLE
+            tvPermissionRationale?.visibility = View.VISIBLE
             showToast("Permission not granted.")
         } else {
             galleryContainer?.visibility = View.VISIBLE
-            tvPermissionNotGranted?.visibility = View.GONE
+            tvPermissionRationale?.visibility = View.GONE
         }
     }
 
@@ -71,6 +75,7 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
 
     override fun initDataset(list: MutableList<Photo>) {
         val adapter = galleryContainer?.adapter as GalleryAdapter
+        (activity as MainActivity).updateTabBadge(MainActivity.MainTabs.TAB_GALLERY, list.size)
         adapter.setList(list)
     }
 

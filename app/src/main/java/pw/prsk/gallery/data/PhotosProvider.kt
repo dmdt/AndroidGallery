@@ -12,7 +12,7 @@ import android.util.Size
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class PhotosProvider(private val contentResolver: ContentResolver) {
+class PhotosProvider(var contentResolver: ContentResolver?) {
     suspend fun loadPhotos(): MutableList<Photo> {
         val list: MutableList<Photo> = mutableListOf()
         withContext(Dispatchers.IO) {
@@ -24,7 +24,7 @@ class PhotosProvider(private val contentResolver: ContentResolver) {
                     MediaStore.Images.Media.SIZE
                 )
 
-                val query = contentResolver.query(
+                val query = contentResolver?.query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     null,
@@ -33,7 +33,7 @@ class PhotosProvider(private val contentResolver: ContentResolver) {
                 )
                 query?.use { cursor ->
                     if (cursor.count != 0) {
-                        Log.d("ASD", "${cursor.count}")
+                        Log.i("ASD", "${cursor.count}")
                         val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
                         val sizeIndex = cursor.getColumnIndex(MediaStore.Images.Media.SIZE)
                         while (cursor.moveToNext()) {
@@ -50,6 +50,10 @@ class PhotosProvider(private val contentResolver: ContentResolver) {
                     }
                 }
             } else {
+                val projection = arrayOf(
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.RELATIVE_PATH
+                )
                 //FIXME: Make photos get method for versions below Q
             }
         }
@@ -59,7 +63,7 @@ class PhotosProvider(private val contentResolver: ContentResolver) {
     suspend fun loadThumbnail(path: Uri): Bitmap {
         return withContext(Dispatchers.IO) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentResolver.loadThumbnail(path, Size(150, 150), null)
+                contentResolver!!.loadThumbnail(path, Size(150, 150), null)
             } else {
                 //FIXME: Make thumbnail get method for versions below Q
                 BitmapFactory.decodeFile("TEMP")
