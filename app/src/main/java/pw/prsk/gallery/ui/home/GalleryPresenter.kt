@@ -42,8 +42,9 @@ class GalleryPresenter {
                 val canRequestPermission = fragment.shouldShowRequestPermissionRationale(READ_STORAGE_PERM)
                 if (canRequestPermission) {
                     requestPermission()
+                } else {
+                    view?.showPermissionNotGrantedMessage(true)
                 }
-                view?.showPermissionNotGrantedMessage(true)
             }
             PackageManager.PERMISSION_GRANTED -> {
                 loadPhotos()
@@ -53,7 +54,7 @@ class GalleryPresenter {
 
     private fun requestPermission() {
         val fragment = view as GalleryFragment
-        fragment.requestPermissions(arrayOf(READ_STORAGE_PERM), PERMISSION_REQUEST_CODE)
+        fragment.activity?.requestPermissions(arrayOf(READ_STORAGE_PERM), PERMISSION_REQUEST_CODE)
     }
 
     fun requestPermissionsResult(

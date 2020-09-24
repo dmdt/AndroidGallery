@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -52,13 +53,13 @@ class PhotosProvider(var contentResolver: ContentResolver?) {
         return list
     }
 
-    suspend fun loadThumbnail(path: Uri): Bitmap {
+    suspend fun loadThumbnail(uri: Uri): Bitmap {
         return withContext(Dispatchers.IO) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentResolver!!.loadThumbnail(path, Size(150, 150), null)
-            } else {
-                //FIXME: Make thumbnail get method for versions below Q
-                BitmapFactory.decodeFile("TEMP")
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ->
+                    contentResolver!!.loadThumbnail(uri, Size(150, 150), null)
+                else ->
+                    ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.path), 150, 150)
             }
         }
     }
