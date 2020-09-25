@@ -16,7 +16,7 @@ import pw.prsk.gallery.ui.preferences.SettingsActivity
 import pw.prsk.gallery.utils.ShortcutsHelper
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tlm: TabLayoutMediator
+    private var tlm: TabLayoutMediator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +24,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initShortcuts()
+        shortcutActions()
         initViewPager()
+    }
+
+    private fun shortcutActions() {
+        when (intent.action) {
+            ACTION_OPEN_SETTINGS -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+            else -> return
+        }
     }
 
     private fun initShortcuts() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            val shortcutsHelper = ShortcutsHelper(this)
-            shortcutsHelper.restoreDynamicShortcuts()
-            shortcutsHelper.refreshShortcuts()
+            var shortcutsHelper: ShortcutsHelper? = ShortcutsHelper(this)
+            shortcutsHelper?.restoreDynamicShortcuts()
+            shortcutsHelper?.refreshShortcuts()
+            shortcutsHelper = null
         }
     }
 
@@ -68,8 +80,7 @@ class MainActivity : AppCompatActivity() {
             vpMain.setCurrentItem(tab.position, true)
             tab.text = tabs[position].tabName
         }
-        tlm.attach()
-
+        tlm?.attach()
         when (intent.action) {
             ACTION_OPEN_NEWS -> {
                 vpMain.setCurrentItem(0, false)
@@ -82,8 +93,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        tlm.detach()
+        tlm?.detach()
+        tlm = null
         vpMain.adapter = null
+    }
+
+    override fun onBackPressed() {
+        // Fix library memory leak
+        finishAfterTransition()
     }
 
     fun updateTabBadge(tabInfo: MainTabs, count: Int) {
@@ -100,5 +117,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
 //        Intent actions
         const val ACTION_OPEN_NEWS = "pw.prsk.pw.news"
+        const val ACTION_OPEN_SETTINGS = "pw.prsk.pw.settings"
     }
 }

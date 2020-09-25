@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.preferences.SettingsActivity" />
+        <receiver android:name=".recievers.LangReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import android.os.PersistableBundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import pw.prsk.gallery.R
+import pw.prsk.gallery.data.shortcuts.ShortcutData
 import pw.prsk.gallery.ui.home.MainActivity
 import pw.prsk.gallery.ui.preferences.SettingsActivity
 
@@ -17,6 +18,24 @@ private const val DEBUG_TAG = "ShortcutsHelper"
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 class ShortcutsHelper(private val context: Context) {
+    val shortcutsReferences: HashMap<String, ShortcutData> = hashMapOf()
+
+    init {
+        shortcutsReferences.put(SHORTCUT_ID_NEWS, ShortcutData(
+            MainActivity.ACTION_OPEN_NEWS,
+            R.drawable.ic_news,
+            R.string.shortcut_news_short,
+            R.string.shortcut_news_long
+        ))
+
+        shortcutsReferences.put(SHORTCUT_ID_SETTINGS, ShortcutData(
+            MainActivity.ACTION_OPEN_SETTINGS,
+            R.drawable.ic_settings,
+            R.string.shortcut_settings_short,
+            R.string.shortcut_settings_long
+        ))
+    }
+
     private val shortcutManager: ShortcutManager =
         context.getSystemService(ShortcutManager::class.java)
 
@@ -27,20 +46,12 @@ class ShortcutsHelper(private val context: Context) {
     fun restoreDynamicShortcuts() {
         if (shortcutManager.dynamicShortcuts.size == 0) {
             val newsShortcut = createShortcut(
-                MainActivity::class.java,
                 SHORTCUT_ID_NEWS,
-                MainActivity.ACTION_OPEN_NEWS,
-                R.drawable.ic_news,
-                R.string.shortcut_news_short,
-                R.string.shortcut_news_long
+                shortcutsReferences.get(SHORTCUT_ID_NEWS)!!
             )
             val settingsShortcut = createShortcut(
-                SettingsActivity::class.java,
                 SHORTCUT_ID_SETTINGS,
-                Intent.ACTION_DEFAULT,
-                R.drawable.ic_settings,
-                R.string.shortcut_settings_short,
-                R.string.shortcut_settings_long
+                shortcutsReferences.get(SHORTCUT_ID_SETTINGS)!!
             )
             shortcutManager.dynamicShortcuts = listOf(newsShortcut, settingsShortcut)
         }
@@ -64,8 +75,7 @@ class ShortcutsHelper(private val context: Context) {
                     continue
                 }
                 Log.i(DEBUG_TAG, "Refreshing shortcut.")
-                shortcut.extras?.putLong(LAST_REFRESH_FIELD, currentTime)
-                updateList.add(shortcut)
+                updateList.add(createShortcut(shortcut.id, shortcutsReferences.get(shortcut.id)!!))
             }
         }
 
@@ -96,22 +106,18 @@ class ShortcutsHelper(private val context: Context) {
     }
 
     private fun createShortcut(
-        targetActivity: Class<*>,
         shortcutId: String,
-        action: String,
-        iconResource: Int,
-        shortLabelResource: Int,
-        longLabelResource: Int
+        data: ShortcutData
     ): ShortcutInfo {
-        val intent = Intent(context, targetActivity).apply {
-            this.action = action
+        val intent = Intent(context, MainActivity::class.java).apply {
+            this.action = data.action
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP + Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
         val shortcutBuilder = ShortcutInfo.Builder(context, shortcutId)
-            .setShortLabel(context.resources.getString(shortLabelResource))
-            .setLongLabel(context.resources.getString(longLabelResource))
-            .setIcon(Icon.createWithResource(context, iconResource))
+            .setShortLabel(context.resources.getString(data.shortLabelResource))
+            .setLongLabel(context.resources.getString(data.longLabelResource))
+            .setIcon(Icon.createWithResource(context, data.iconResource))
             .setIntent(intent)
 
         return setShortcutExtra(shortcutBuilder).build()
