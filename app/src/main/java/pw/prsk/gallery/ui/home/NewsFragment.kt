@@ -35,6 +35,16 @@ class NewsFragment : Fragment(), NewsViewInterface {
         init()
     }
 
+    override fun onResume() {
+        super.onResume()
+        refreshLayout?.isEnabled = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        refreshLayout?.isEnabled = false
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         newsContainer?.apply {
             layoutManager = LinearLayoutManager(context)
@@ -71,6 +81,7 @@ class NewsFragment : Fragment(), NewsViewInterface {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+        newsContainer?.adapter = null
         newsContainer = null
         refreshLayout = null
     }

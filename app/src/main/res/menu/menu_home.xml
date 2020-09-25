@@ -4,7 +4,6 @@
 
     <item
         android:id="@+id/miSettings"
-        android:icon="@drawable/ic_settings_gear"
         android:title="@string/menu_settings_label"
         app:showAsAction="never" />
 </menu>

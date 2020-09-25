@@ -5,6 +5,11 @@
         permission. If you want to unlock this functionality
         you should get to the settings and grant permission.</string>
 
+    <string name="shortcut_news_short">News</string>
+    <string name="shortcut_news_long">Open news</string>
+    <string name="shortcut_settings_short">Settings</string>
+    <string name="shortcut_settings_long">Open settings</string>
+
     <string-array name="theme_preference_list">
         <item>Light theme</item>
         <item>Dark theme</item>
