@@ -21,19 +21,23 @@ class ShortcutsHelper(private val context: Context) {
     val shortcutsReferences: HashMap<String, ShortcutData> = hashMapOf()
 
     init {
-        shortcutsReferences.put(SHORTCUT_ID_NEWS, ShortcutData(
-            MainActivity.ACTION_OPEN_NEWS,
-            R.drawable.ic_news,
-            R.string.shortcut_news_short,
-            R.string.shortcut_news_long
-        ))
+        shortcutsReferences.put(
+            SHORTCUT_ID_NEWS, ShortcutData(
+                MainActivity.ACTION_OPEN_NEWS,
+                R.drawable.ic_news,
+                R.string.shortcut_news_short,
+                R.string.shortcut_news_long
+            )
+        )
 
-        shortcutsReferences.put(SHORTCUT_ID_SETTINGS, ShortcutData(
-            MainActivity.ACTION_OPEN_SETTINGS,
-            R.drawable.ic_settings,
-            R.string.shortcut_settings_short,
-            R.string.shortcut_settings_long
-        ))
+        shortcutsReferences.put(
+            SHORTCUT_ID_SETTINGS, ShortcutData(
+                MainActivity.ACTION_OPEN_SETTINGS,
+                R.drawable.ic_settings,
+                R.string.shortcut_settings_short,
+                R.string.shortcut_settings_long
+            )
+        )
     }
 
     private val shortcutManager: ShortcutManager =
@@ -74,8 +78,14 @@ class ShortcutsHelper(private val context: Context) {
                 if (shortcutExtra.getLong(LAST_REFRESH_FIELD) >= timeThreshold) {
                     continue
                 }
-                Log.i(DEBUG_TAG, "Refreshing shortcut.")
-                updateList.add(createShortcut(shortcut.id, shortcutsReferences.get(shortcut.id)!!))
+                Log.i(DEBUG_TAG, "Refreshing shortcut \"${shortcut.id}\".")
+                val shortcutData = ShortcutData(
+                    shortcutExtra.getString(BUNDLE_ACTION_KEY, Intent.ACTION_DEFAULT),
+                    shortcutExtra.getInt(BUNDLE_ICON_KEY),
+                    shortcutExtra.getInt(BUNDLE_SHORT_LABEL_KEY),
+                    shortcutExtra.getInt(BUNDLE_LONG_LABEL_KEY)
+                )
+                updateList.add(createShortcut(shortcut.id, shortcutData))
             }
         }
 
@@ -120,12 +130,19 @@ class ShortcutsHelper(private val context: Context) {
             .setIcon(Icon.createWithResource(context, data.iconResource))
             .setIntent(intent)
 
-        return setShortcutExtra(shortcutBuilder).build()
+        return setShortcutExtra(shortcutBuilder, data).build()
     }
 
-    private fun setShortcutExtra(shortcutBuilder: ShortcutInfo.Builder): ShortcutInfo.Builder {
+    private fun setShortcutExtra(
+        shortcutBuilder: ShortcutInfo.Builder,
+        data: ShortcutData
+    ): ShortcutInfo.Builder {
         val extra: PersistableBundle = PersistableBundle().apply {
             putLong(LAST_REFRESH_FIELD, System.currentTimeMillis())
+            putString(BUNDLE_ACTION_KEY, data.action)
+            putInt(BUNDLE_ICON_KEY, data.iconResource)
+            putInt(BUNDLE_SHORT_LABEL_KEY, data.shortLabelResource)
+            putInt(BUNDLE_LONG_LABEL_KEY, data.longLabelResource)
         }
         shortcutBuilder.setExtras(extra)
 
@@ -139,5 +156,10 @@ class ShortcutsHelper(private val context: Context) {
         //        Shortcut ids
         private const val SHORTCUT_ID_NEWS = "news"
         private const val SHORTCUT_ID_SETTINGS = "settings"
+        //        Persistable Bundle keys
+        private const val BUNDLE_ACTION_KEY = "bundle.action"
+        private const val BUNDLE_ICON_KEY = "bundle.icon"
+        private const val BUNDLE_SHORT_LABEL_KEY = "bundle.short_label"
+        private const val BUNDLE_LONG_LABEL_KEY = "bundle.long_label"
     }
 }
