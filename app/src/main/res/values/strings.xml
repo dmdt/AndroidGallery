@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Gallery</string>
+    <string name="menu_settings_label">Settings</string>
+    <string name="label_permission_not_granted">To display photos from gallery we need storage
+        permission. If you want to unlock this functionality
+        you should get to the settings and grant permission.</string>
+
+    <string name="shortcut_news_short">News</string>
+    <string name="shortcut_news_long">Open news</string>
+    <string name="shortcut_settings_short">Settings</string>
+    <string name="shortcut_settings_long">Open settings</string>
+
+    <string-array name="theme_preference_list">
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Follow system</item>
+    </string-array>
+
+    <string-array name="language_preference_list">
+        <item>English</item>
+        <item>Russian</item>
+        <item>Follow system</item>
+    </string-array>
 </resources>
