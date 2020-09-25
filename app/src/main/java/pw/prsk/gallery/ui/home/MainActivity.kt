@@ -2,9 +2,6 @@ package pw.prsk.gallery.ui.home
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
-import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pw.prsk.gallery.R
 import pw.prsk.gallery.ui.preferences.PreferenceFragment
 import pw.prsk.gallery.ui.preferences.SettingsActivity
+import pw.prsk.gallery.utils.ShortcutsHelper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tlm: TabLayoutMediator
@@ -31,37 +29,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initShortcuts() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            val sm = getSystemService(ShortcutManager::class.java)
-
-            val openNewsIntent = Intent(this, MainActivity::class.java).apply {
-                action = ACTION_OPEN_NEWS
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP + Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-
-            val openSettingsIntent = Intent(this, SettingsActivity::class.java).apply {
-                action = Intent.ACTION_DEFAULT
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP + Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-
-            val newsSc = ShortcutInfo.Builder(this, "news")
-                .setShortLabel("News")
-                .setLongLabel("Open news")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_news))
-                .setIntent(openNewsIntent)
-                .build()
-
-            val settingsSc = ShortcutInfo.Builder(this, "settings")
-                .setShortLabel("Settings")
-                .setLongLabel("Open settings")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_settings))
-                .setIntent(openSettingsIntent)
-                .build()
-
-            if (sm.dynamicShortcuts.size == 0) {
-                sm.dynamicShortcuts = listOf(newsSc, settingsSc)
-            } else {
-                sm.updateShortcuts(listOf(newsSc, settingsSc))
-            }
+            val shortcutsHelper = ShortcutsHelper(this)
+            shortcutsHelper.restoreDynamicShortcuts()
+            shortcutsHelper.refreshShortcuts()
         }
     }
 
@@ -128,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val ACTION_OPEN_NEWS = "pw.prsk.pw.news"
-        private const val ACTION_OPEN_TEST = "pw.prsk.pw.test"
+//        Intent actions
+        const val ACTION_OPEN_NEWS = "pw.prsk.pw.news"
     }
 }
