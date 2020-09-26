@@ -54,11 +54,10 @@ class GalleryFragment: Fragment(), GalleryViewInterface {
         presenter.detachView()
     }
 
-    override fun showPermissionNotGrantedMessage(show: Boolean) {
+    override fun showPermissionRationale(show: Boolean) {
         if (show) {
             galleryContainer?.visibility = View.GONE
             tvPermissionRationale?.visibility = View.VISIBLE
-            showToast("Permission not granted.")
         } else {
             galleryContainer?.visibility = View.VISIBLE
             tvPermissionRationale?.visibility = View.GONE
