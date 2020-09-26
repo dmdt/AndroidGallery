@@ -20,8 +20,7 @@ class PhotosProvider(var contentResolver: ContentResolver?) {
         val list: MutableList<Photo> = mutableListOf()
         withContext(Dispatchers.IO) {
             val projection = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.SIZE
+                MediaStore.Images.Media._ID
             )
 
             val query = contentResolver?.query(
@@ -35,16 +34,14 @@ class PhotosProvider(var contentResolver: ContentResolver?) {
                 if (cursor.count != 0) {
                     Log.i(DEBUG_TAG, "Photos found: ${cursor.count}")
                     val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-                    val sizeIndex = cursor.getColumnIndex(MediaStore.Images.Media.SIZE)
                     while (cursor.moveToNext()) {
                         val id = cursor.getLong(idIndex)
-                        val size = cursor.getInt(sizeIndex)
 
                         val contentUri: Uri = ContentUris.withAppendedId(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                             id
                         )
-                        val photo = Photo(contentUri, size)
+                        val photo = Photo(id, contentUri)
                         list.add(photo)
                     }
                 }
@@ -53,13 +50,18 @@ class PhotosProvider(var contentResolver: ContentResolver?) {
         return list
     }
 
-    suspend fun loadThumbnail(uri: Uri): Bitmap {
+    suspend fun loadThumbnail(photo: Photo): Bitmap {
         return withContext(Dispatchers.IO) {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ->
-                    contentResolver!!.loadThumbnail(uri, Size(150, 150), null)
+                    contentResolver!!.loadThumbnail(photo.uri, Size(150, 150), null)
                 else ->
-                    ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.path), 150, 150)
+                    MediaStore.Images.Thumbnails.getThumbnail(
+                        contentResolver,
+                        photo.id,
+                        MediaStore.Images.Thumbnails.MICRO_KIND,
+                        null
+                    )
             }
         }
     }
