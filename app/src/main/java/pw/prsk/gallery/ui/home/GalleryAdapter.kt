@@ -35,7 +35,7 @@ class GalleryAdapter :
         coroutineScope.launch {
             var bm: Bitmap? = null
             try {
-                bm = provider?.loadThumbnail(photos?.get(position)!!.path)
+                bm = provider?.loadThumbnail(photos?.get(position)!!)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             }
